@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CB Ellipse Moon Trail</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script>
+let moonTexture;
+let trail = [];
+let angle = 0;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  moonTexture = createGraphics(windowWidth, windowHeight);
+  generateMoonTexture();
+}
+
+function draw() {
+  background(0);
+  image(moonTexture, 0, 0);
+  
+  let radius = 300;
+  let x = width / 2 + cos(angle) * radius;
+  let y = height / 2 + sin(angle) * radius;
+
+  trail.push(createVector(x, y));
+
+  noFill();
+  for (let i = 1; i < trail.length; i++) {
+    let alpha = map(i, 0, trail.length, 0, 255);
+    stroke(255, alpha);
+    line(trail[i - 1].x, trail[i - 1].y, trail[i].x, trail[i].y);
+  }
+
+  noStroke();
+  fill(255);
+  ellipse(x, y, 5, 5);
+
+  angle += 0.02;
+
+  if (trail.length > 100) {
+    trail.shift();
+  }
+}
+
+function generateMoonTexture() {
+  moonTexture.loadPixels();
+  for (let x = 0; x < moonTexture.width; x++) {
+    for (let y = 0; y < moonTexture.height; y++) {
+      let nx = x * 0.004;
+      let ny = y * 0.004;
+      let b1 = noise(nx, ny) * 150 + random(-10, 10);
+      let b2 = noise(nx * 2.0, ny * 2.0) * 60;
+      let brightness = constrain(b1 + b2, 40, 200);
+      moonTexture.set(x, y, color(brightness));
+    }
+  }
+  moonTexture.updatePixels();
+}
+</script>
+</body>
+</html>
