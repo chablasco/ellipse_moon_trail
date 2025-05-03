@@ -21,18 +21,19 @@
 let moonTexture;
 let trail = [];
 let angle = 0;
+let radius;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   moonTexture = createGraphics(windowWidth, windowHeight);
+  radius = min(width, height) / 3; // Dynamic radius
   generateMoonTexture();
 }
 
 function draw() {
   background(0);
   image(moonTexture, 0, 0);
-  
-  let radius = 300;
+
   let x = width / 2 + cos(angle) * radius;
   let y = height / 2 + sin(angle) * radius;
 
@@ -47,7 +48,7 @@ function draw() {
 
   noStroke();
   fill(255);
-  ellipse(x, y, 5, 5);
+  ellipse(x, y, 8, 8);
 
   angle += 0.02;
 
@@ -56,13 +57,17 @@ function draw() {
   }
 }
 
-  function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-  }
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  moonTexture = createGraphics(windowWidth, windowHeight); // Resize texture
+  radius = min(width, height) / 3; // Recalculate radius
+  trail = []; // Clear trail to match new size
+  generateMoonTexture(); // Regenerate background
+}
 
-  function mousePressed() {
-    fullscreen(!fullscreen());
-  }
+function mousePressed() {
+  fullscreen(!fullscreen());
+}
 
 function generateMoonTexture() {
   moonTexture.loadPixels();
