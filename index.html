@@ -56,6 +56,14 @@ function draw() {
   }
 }
 
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  }
+
+  function mousePressed() {
+    fullscreen(!fullscreen());
+  }
+
 function generateMoonTexture() {
   moonTexture.loadPixels();
   for (let x = 0; x < moonTexture.width; x++) {
